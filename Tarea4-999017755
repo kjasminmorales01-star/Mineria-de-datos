@@ -1,0 +1,14 @@
+library(arules)
+library(ggplot2)
+library(readxl)
+data <- read_excel("C:\\Users\\kjasm\\Downloads\\base-de-datos-violencia-intrafamiliar-ano-2024_v3.xlsx")
+datos4 <- data[,c("VIC_ALFAB","VIC_REL_AGR","AGR_EDAD","VIC_EDAD","AGR_OCUP","HEC_AREA","HEC_TIPAGRE","VIC_SEXO")]
+datos4[is.na(datos4)] <- -1
+
+cluster <- kmeans(datos4, centers = 2)
+
+ggplot(datos4, aes(x = AGR_OCUP, y = VIC_EDAD, color =as.factor(cluster$cluster)))+
+  geom_point()+
+  geom_point(data = as.data.frame(cluster$centers), aes(x = AGR_OCUP, y = VIC_EDAD), color="black", size=4, shape=17)+
+  labs(title = "Ocupación del Agresor vs Edad de la victima") +
+  theme_minimal()
